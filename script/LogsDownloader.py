@@ -39,7 +39,6 @@ import getopt
 import hashlib
 import logging
 import os
-import platform
 import re
 import signal
 import sys
