@@ -57,6 +57,8 @@ import loggerglue.emitter
 import loggerglue.logger
 from Crypto.Cipher import AES
 
+import time
+
 """
 Main class for downloading log files
 """
@@ -316,7 +318,8 @@ class LogsDownloader:
     """
     def download_log_file(self, filename):
         # get the file name
-        filename = str(filename.rstrip("\r\n"))
+        curr_log_file_name_arr = file_name.split("_")
+        filename = str((curr_log_file_name_arr[0] + "_" + curr_log_file_name_arr[1] + ".log").rstrip("\r\n"))
         try:
             # download the file
             file_content = self.file_downloader.request_file_content(self.config.BASE_URL + filename)
@@ -416,7 +419,7 @@ class LastFileId:
         # get the current id
         curr_log_file_id = int(curr_log_file_name_arr[1].rstrip(".log")) + 1 + skip_files
         # build the next log file name
-        new_log_file_id = curr_log_file_name_arr[0] + "_" + str(curr_log_file_id) + ".log"
+        new_log_file_id = curr_log_file_name_arr[0] + "_" + str(curr_log_file_id) + "_" + time.strftime("%Y%m%d_%H%M%S") + ".log"
         return new_log_file_id
 
     """
@@ -473,7 +476,7 @@ class LogsFileIndex:
     """
     @staticmethod
     def validate_logs_index_file_format(content):
-        file_rex = re.compile("(\d+_\d+\.log\n)+")
+        file_rex = re.compile("(\d+_\d+.*\.log\n)+")
         if file_rex.match(content):
             return True
         return False
@@ -483,7 +486,7 @@ class LogsFileIndex:
     """
     @staticmethod
     def validate_log_file_format(content):
-        file_rex = re.compile("(\d+_\d+\.log)")
+        file_rex = re.compile("(\d+_\d+.*\.log\n)+")
         if file_rex.match(content):
             return True
         return False
@@ -599,8 +602,8 @@ class FileDownloader:
 
 if __name__ == "__main__":
     # default paths
-    path_to_config_folder = "/etc/incapsula/logs/config"
-    path_to_system_logs_folder = "/var/log/incapsula/logsDownloader/"
+    path_to_config_folder = "/usr/local/waf/logs-downloader/config"
+    path_to_system_logs_folder = "/var/log/waf/"
     # default log level
     system_logs_level = "INFO"
     # read arguments
