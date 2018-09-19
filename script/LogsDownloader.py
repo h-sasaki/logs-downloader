@@ -39,7 +39,7 @@ import getopt
 import hashlib
 import logging
 import os
-import platform
+#import platform
 import re
 import signal
 import sys
@@ -49,15 +49,13 @@ import traceback
 import ssl
 import urllib2
 import zlib
-from logging import handlers
+#from logging import handlers
 
 import M2Crypto
 import loggerglue
 import loggerglue.emitter
 import loggerglue.logger
 from Crypto.Cipher import AES
-
-import time
 
 """
 Main class for downloading log files
@@ -78,7 +76,7 @@ class LogsDownloader:
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
         # keep logs history for 7 days
-        file_handler = logging.handlers.TimedRotatingFileHandler(os.path.join(log_dir, "logs_downloader.log"), when='midnight', backupCount=7)
+        file_handler = logging.handlers.TimedRotatingFileHandler(os.path.join(log_dir, "logs_downloader_jp.log"), when='midnight', backupCount=7)
         formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
         file_handler.setFormatter(formatter)
         self.logger.addHandler(file_handler)
@@ -318,7 +316,7 @@ class LogsDownloader:
     """
     def download_log_file(self, filename):
         # get the file name
-        curr_log_file_name_arr = file_name.split("_")
+        curr_log_file_name_arr = filename.split("_")
         filename = str((curr_log_file_name_arr[0] + "_" + curr_log_file_name_arr[1] + ".log").rstrip("\r\n"))
         try:
             # download the file
